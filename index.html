@@ -1,1 +1,994 @@
+<!DOCTYPE html>
+<html lang="id">
 
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width,
+      initial-scale=1,
+      maximum-scale=1,
+      user-scalable=no">
+
+<title>Absensi QR - XII MIA 2</title>
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #eef3f8;
+    color: #17202a;
+}
+
+.header {
+    background: #0b5ed7;
+    color: white;
+    text-align: center;
+    padding: 20px 15px;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.header p {
+    margin: 7px 0 0;
+    font-size: 14px;
+}
+
+.container {
+    max-width: 600px;
+    margin: auto;
+    padding: 15px;
+}
+
+.card {
+    background: white;
+    border-radius: 18px;
+    padding: 18px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 18px rgba(0,0,0,.08);
+}
+
+.session {
+    text-align: center;
+}
+
+.session-title {
+    font-size: 13px;
+    color: #777;
+}
+
+.session-class {
+    font-size: 22px;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+#reader {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 15px;
+}
+
+.start-button {
+    width: 100%;
+    border: none;
+    border-radius: 14px;
+    background: #0b5ed7;
+    color: white;
+    padding: 16px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.start-button:active {
+    transform: scale(.98);
+}
+
+.status {
+    display: none;
+    text-align: center;
+    border-radius: 18px;
+    padding: 20px;
+    margin-top: 15px;
+}
+
+.success {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.late {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.duplicate {
+    background: #e0e7ff;
+    color: #3730a3;
+}
+
+.error {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.icon {
+    font-size: 42px;
+}
+
+.name {
+    font-size: 22px;
+    font-weight: bold;
+    margin: 8px 0;
+}
+
+.detail {
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.counter {
+    text-align: center;
+}
+
+.counter-number {
+    font-size: 38px;
+    font-weight: bold;
+    color: #0b5ed7;
+}
+
+.counter-label {
+    color: #666;
+    font-size: 14px;
+}
+
+.instruction {
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.hidden {
+    display: none;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="header">
+
+    <h1>📱 ABSENSI QR SISWA</h1>
+
+    <p>SMAN 1 MUARA UYA</p>
+
+</div>
+
+
+<div class="container">
+
+
+    <div class="card session">
+
+        <div class="session-title">
+            SESI ABSENSI
+        </div>
+
+        <div class="session-class">
+            XII MIA 2
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <button
+            id="startButton"
+            class="start-button"
+            onclick="startScanner()">
+
+            📷 MULAI SCANNER
+
+        </button>
+
+        <br><br>
+
+        <div id="reader"></div>
+
+    </div>
+
+
+    <div
+        id="status"
+        class="status">
+    </div>
+
+
+    <div class="card counter">
+
+        <div
+            id="counter"
+            class="counter-number">
+
+            0 / 31
+
+        </div>
+
+        <div class="counter-label">
+
+            siswa sudah melakukan absensi
+
+        </div>
+
+    </div>
+
+
+    <div class="card instruction">
+
+        <strong>
+            Cara menggunakan
+        </strong>
+
+        <br><br>
+
+        Tekan <strong>MULAI SCANNER</strong> satu kali.
+
+        <br>
+
+        Izinkan akses kamera.
+
+        <br>
+
+        Arahkan kamera ke QR siswa.
+
+        <br><br>
+
+        Setelah berhasil:
+
+        <strong>
+            BEEP → NAMA → SCAN LAGI
+        </strong>
+
+    </div>
+
+
+</div>
+
+
+<script>
+
+
+/* ==================================================
+   KONFIGURASI
+   ================================================== */
+
+const API_URL =
+    'YOUR_APPS_SCRIPT_URL';
+
+
+const API_KEY =
+    'MIA2-ABSEN-2026-RAHASIA';
+
+
+const SESI =
+    'XII MIA 2';
+
+
+const TOTAL_SISWA =
+    31;
+
+
+let scanner = null;
+
+let scanning = false;
+
+let processing = false;
+
+let jumlahHadir = 0;
+
+
+
+/* ==================================================
+   AUDIO BEEP
+   ================================================== */
+
+let audioContext = null;
+
+
+function initAudio() {
+
+    try {
+
+        const AudioContext =
+            window.AudioContext ||
+            window.webkitAudioContext;
+
+        if (!audioContext) {
+
+            return;
+
+        }
+
+        if (
+            audioContext.state ===
+            'suspended'
+        ) {
+
+            audioContext.resume();
+
+        }
+
+    }
+
+    catch (e) {
+
+        console.log(e);
+
+    }
+
+}
+
+
+
+function beepSuccess() {
+
+    playBeep(
+        900,
+        120
+    );
+
+}
+
+
+
+function beepDuplicate() {
+
+    playBeep(
+        550,
+        180
+    );
+
+}
+
+
+
+function beepError() {
+
+    playBeep(
+        250,
+        300
+    );
+
+}
+
+
+
+function playBeep(
+    frequency,
+    duration
+) {
+
+    try {
+
+        if (!audioContext) {
+
+            const AudioContext =
+                window.AudioContext ||
+                window.webkitAudioContext;
+
+            audioContext =
+                new AudioContext();
+
+        }
+
+
+        const oscillator =
+            audioContext
+                .createOscillator();
+
+
+        const gain =
+            audioContext
+                .createGain();
+
+
+        oscillator.connect(gain);
+
+        gain.connect(
+            audioContext.destination
+        );
+
+
+        oscillator.frequency.value =
+            frequency;
+
+
+        gain.gain.setValueAtTime(
+            0.25,
+            audioContext.currentTime
+        );
+
+
+        oscillator.start();
+
+
+        oscillator.stop(
+            audioContext.currentTime +
+            duration / 1000
+        );
+
+    }
+
+    catch (e) {
+
+        console.log(e);
+
+    }
+
+}
+
+
+
+/* ==================================================
+   STATUS
+   ================================================== */
+
+function showStatus(result) {
+
+    const box =
+        document.getElementById(
+            'status'
+        );
+
+
+    box.style.display =
+        'block';
+
+
+    box.className =
+        'status ' +
+        (
+            result.type ||
+            'error'
+        );
+
+
+    if (result.success) {
+
+        const icon =
+            result.type === 'late'
+            ? '⚠️'
+            : '✅';
+
+
+        box.innerHTML = `
+
+            <div class="icon">
+                ${icon}
+            </div>
+
+            <div class="name">
+                ${escapeHtml(result.nama)}
+            </div>
+
+            <div class="detail">
+
+                ${escapeHtml(result.kelas)}
+
+                <br>
+
+                <strong>
+                    ${escapeHtml(result.status)}
+                </strong>
+
+                — ${escapeHtml(result.jam)}
+
+            </div>
+
+        `;
+
+    }
+
+    else {
+
+        const icon =
+            result.type === 'duplicate'
+            ? '⚠️'
+            : '❌';
+
+
+        box.innerHTML = `
+
+            <div class="icon">
+                ${icon}
+            </div>
+
+            <div class="name">
+
+                ${
+                    result.nama
+                    ? escapeHtml(result.nama)
+                    : 'QR TIDAK DIKENAL'
+                }
+
+            </div>
+
+            <div class="detail">
+
+                ${escapeHtml(result.message || '')}
+
+                ${
+                    result.jam
+                    ? '<br>Pukul ' +
+                      escapeHtml(result.jam)
+                    : ''
+                }
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+
+function escapeHtml(text) {
+
+    return String(text || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+
+}
+
+
+
+/* ==================================================
+   JSONP
+   ================================================== */
+
+function callBackend(
+    id
+) {
+
+    return new Promise(
+        function(resolve, reject) {
+
+            const callbackName =
+                'absenCallback_' +
+                Date.now() +
+                '_' +
+                Math.floor(
+                    Math.random() * 100000
+                );
+
+
+            const script =
+                document.createElement(
+                    'script'
+                );
+
+
+            const timeout =
+                setTimeout(
+                    function() {
+
+                        cleanup();
+
+                        reject(
+                            new Error(
+                                'Server tidak merespons.'
+                            )
+                        );
+
+                    },
+                    15000
+                );
+
+
+            function cleanup() {
+
+                clearTimeout(timeout);
+
+                delete window[
+                    callbackName
+                ];
+
+                if (
+                    script.parentNode
+                ) {
+
+                    script.parentNode
+                        .removeChild(
+                            script
+                        );
+
+                }
+
+            }
+
+
+            window[
+                callbackName
+            ] = function(result) {
+
+                cleanup();
+
+                resolve(result);
+
+            };
+
+
+            const url =
+                API_URL +
+                '?action=attendance' +
+                '&id=' +
+                encodeURIComponent(id) +
+                '&sesi=' +
+                encodeURIComponent(SESI) +
+                '&key=' +
+                encodeURIComponent(API_KEY) +
+                '&callback=' +
+                encodeURIComponent(
+                    callbackName
+                ) +
+                '&t=' +
+                Date.now();
+
+
+            script.src =
+                url;
+
+
+            script.onerror =
+                function() {
+
+                    cleanup();
+
+                    reject(
+                        new Error(
+                            'Gagal menghubungi server.'
+                        )
+                    );
+
+                };
+
+
+            document.body.appendChild(
+                script
+            );
+
+        }
+    );
+
+}
+
+
+
+/* ==================================================
+   PROSES QR
+   ================================================== */
+
+async function onScanSuccess(
+    decodedText
+) {
+
+
+    if (processing) {
+
+        return;
+
+    }
+
+
+    processing = true;
+
+
+    const id =
+        decodedText
+            .trim();
+
+
+    try {
+
+
+        const result =
+            await callBackend(
+                id
+            );
+
+
+        if (
+            result.success
+        ) {
+
+            beepSuccess();
+
+            showStatus(
+                result
+            );
+
+
+            jumlahHadir++;
+
+            updateCounter();
+
+
+        }
+
+        else if (
+            result.type ===
+            'duplicate'
+        ) {
+
+            beepDuplicate();
+
+            showStatus(
+                result
+            );
+
+        }
+
+        else {
+
+            beepError();
+
+            showStatus(
+                result
+            );
+
+        }
+
+
+    }
+
+    catch (error) {
+
+        beepError();
+
+
+        showStatus({
+
+            success:
+                false,
+
+            type:
+                'error',
+
+            message:
+                error.message
+
+        });
+
+    }
+
+
+    /*
+     * Jeda sebentar supaya satu QR
+     * tidak terbaca berkali-kali.
+     */
+
+    setTimeout(
+        function() {
+
+            processing =
+                false;
+
+        },
+        1000
+    );
+
+}
+
+
+
+/* ==================================================
+   COUNTER
+   ================================================== */
+
+function updateCounter() {
+
+    document
+        .getElementById(
+            'counter'
+        )
+        .innerText =
+        jumlahHadir +
+        ' / ' +
+        TOTAL_SISWA;
+
+}
+
+
+
+/* ==================================================
+   MULAI SCANNER
+   ================================================== */
+
+async function startScanner() {
+
+
+    if (scanning) {
+
+        return;
+
+    }
+
+
+    initAudio();
+
+
+    const button =
+        document.getElementById(
+            'startButton'
+        );
+
+
+    button.innerText =
+        '⏳ MEMBUKA KAMERA...';
+
+
+    button.disabled =
+        true;
+
+
+    try {
+
+
+        scanner =
+            new Html5Qrcode(
+                'reader'
+            );
+
+
+        /*
+         * Kamera belakang
+         */
+
+        await scanner.start(
+
+            {
+                facingMode:
+                    {
+                        exact:
+                            'environment'
+                    }
+            },
+
+
+            {
+                fps: 15,
+
+                qrbox: function(
+                    viewfinderWidth,
+                    viewfinderHeight
+                ) {
+
+                    const size =
+                        Math.min(
+                            viewfinderWidth,
+                            viewfinderHeight
+                        ) * 0.70;
+
+
+                    return {
+
+                        width:
+                            Math.floor(size),
+
+                        height:
+                            Math.floor(size)
+
+                    };
+
+                },
+
+                aspectRatio:
+                    1.0
+
+            },
+
+
+            onScanSuccess,
+
+            function() {}
+
+        );
+
+
+        scanning =
+            true;
+
+
+        button.innerText =
+            '🟢 SCANNER AKTIF';
+
+
+        button.style.background =
+            '#198754';
+
+
+    }
+
+    catch (error) {
+
+
+        console.error(error);
+
+
+        button.disabled =
+            false;
+
+
+        button.innerText =
+            '📷 COBA LAGI';
+
+
+        beepError();
+
+
+        showStatus({
+
+            success:
+                false,
+
+            type:
+                'error',
+
+            message:
+                'Kamera tidak dapat digunakan. ' +
+                'Pastikan izin kamera diberikan ' +
+                'kepada Safari dan halaman dibuka ' +
+                'melalui HTTPS.'
+
+        });
+
+    }
+
+}
+
+
+
+/* ==================================================
+   LOAD
+   ================================================== */
+
+window.addEventListener(
+    'load',
+    function() {
+
+        console.log(
+            'Scanner Absensi siap.'
+        );
+
+    }
+);
+
+
+</script>
+
+</body>
+
+</html>
