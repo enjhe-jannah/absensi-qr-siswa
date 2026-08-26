@@ -12,7 +12,9 @@
 
   <title>Presensi Sholat XII MIA 2</title>
 
-  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <script
+    src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"
+  ></script>
 
 
   <style>
@@ -20,6 +22,7 @@
     * {
       box-sizing: border-box;
     }
+
 
     body {
 
@@ -47,7 +50,7 @@
 
       margin: auto;
 
-      padding: 14px;
+      padding: 10px;
 
     }
 
@@ -58,7 +61,7 @@
 
       border-radius: 26px;
 
-      padding: 20px;
+      padding: 18px;
 
       box-shadow:
         0 8px 30px rgba(0,0,0,0.08);
@@ -91,12 +94,12 @@
 
 
     /* =========================================
-       PILIH SESI
+       SESI
        ========================================= */
 
     .session-title {
 
-      margin-top: 20px;
+      margin-top: 18px;
 
       margin-bottom: 10px;
 
@@ -138,6 +141,8 @@
 
       cursor: pointer;
 
+      transition: .15s;
+
     }
 
 
@@ -175,7 +180,7 @@
 
       gap: 9px;
 
-      margin: 17px 0;
+      margin: 16px 0;
 
     }
 
@@ -186,7 +191,7 @@
 
       border-radius: 17px;
 
-      padding: 12px 4px;
+      padding: 11px 4px;
 
       text-align: center;
 
@@ -225,11 +230,15 @@
 
     .camera-box {
 
+      position: relative;
+
       border-radius: 20px;
 
       overflow: hidden;
 
       background: #111;
+
+      width: 100%;
 
       min-height: 280px;
 
@@ -240,6 +249,10 @@
 
       width: 100%;
 
+      min-height: 280px;
+
+      position: relative;
+
     }
 
 
@@ -249,7 +262,97 @@
 
       height: auto !important;
 
+      min-height: 280px;
+
+      object-fit: contain !important;
+
+      display: block;
+
       border-radius: 20px;
+
+    }
+
+
+    /*
+     * Panduan visual saja.
+     *
+     * BUKAN batas scanner.
+     *
+     * Scanner sebenarnya membaca seluruh
+     * area video.
+     */
+
+    .scan-guide {
+
+      position: absolute;
+
+      left: 8%;
+
+      right: 8%;
+
+      top: 8%;
+
+      bottom: 8%;
+
+      border: 3px solid rgba(255,255,255,.85);
+
+      border-radius: 22px;
+
+      pointer-events: none;
+
+      z-index: 20;
+
+      box-shadow:
+        0 0 0 9999px rgba(0,0,0,.12);
+
+    }
+
+
+    .scan-guide::before {
+
+      content: "";
+
+      position: absolute;
+
+      left: 50%;
+
+      top: 50%;
+
+      width: 55px;
+
+      height: 55px;
+
+      transform:
+        translate(-50%, -50%);
+
+      border:
+        2px solid rgba(255,255,255,.55);
+
+      border-radius: 10px;
+
+    }
+
+
+    .scan-guide-text {
+
+      position: absolute;
+
+      left: 0;
+
+      right: 0;
+
+      bottom: -38px;
+
+      text-align: center;
+
+      color: white;
+
+      font-size: 12px;
+
+      font-weight: 700;
+
+      text-shadow:
+        0 1px 3px #000;
 
     }
 
@@ -307,7 +410,7 @@
 
       margin-top: 14px;
 
-      padding: 17px;
+      padding: 15px;
 
       border-radius: 18px;
 
@@ -321,7 +424,7 @@
 
       font-weight: 600;
 
-      min-height: 58px;
+      min-height: 56px;
 
       display: flex;
 
@@ -369,7 +472,7 @@
 
       margin-top: 13px;
 
-      padding: 18px;
+      padding: 17px;
 
       border-radius: 20px;
 
@@ -402,7 +505,7 @@
 
       margin-top: 4px;
 
-      font-size: 24px;
+      font-size: 23px;
 
       font-weight: 800;
 
@@ -435,7 +538,7 @@
 
     .info {
 
-      margin-top: 16px;
+      margin-top: 15px;
 
       font-size: 12px;
 
@@ -452,13 +555,13 @@
 
       .container {
 
-        padding: 10px;
+        padding: 8px;
 
       }
 
       .card {
 
-        padding: 16px;
+        padding: 15px;
 
       }
 
@@ -500,7 +603,7 @@
     </div>
 
 
-    <!-- PILIH SESI -->
+    <!-- SESI -->
 
     <div class="session-title">
       PILIH SESI PRESENSI
@@ -508,7 +611,6 @@
 
 
     <div class="sessions">
-
 
       <button
         id="dzuhurButton"
@@ -538,7 +640,6 @@
         Sholat Ashar
 
       </button>
-
 
     </div>
 
@@ -603,10 +704,22 @@
 
       <div id="reader"></div>
 
+      <div
+        id="scanGuide"
+        class="scan-guide"
+        style="display:none;"
+      >
+
+        <div class="scan-guide-text">
+          Arahkan QR ke area ini — tidak perlu memenuhi layar
+        </div>
+
+      </div>
+
     </div>
 
 
-    <!-- MULAI -->
+    <!-- START -->
 
     <button
       id="startButton"
@@ -706,36 +819,51 @@
 <script>
 
 
-/**************************************************
- * KONFIGURASI
- **************************************************/
+/* =================================================
+   KONFIGURASI
+   ================================================= */
 
 const API_URL =
   "https://script.google.com/macros/s/AKfycbytJl0gE1YIkkFfI8NUHsX_YhKyhiWlrfRUXCEMzhDqAMfYuQRldhOP6x9PrLc1sa86/exec";
 
 
-/**************************************************
- * VARIABEL
- **************************************************/
+/* =================================================
+   VARIABEL
+   ================================================= */
 
 let scanner = null;
 
 let scannerRunning = false;
-
-let processingScan = false;
 
 let selectedSession = "";
 
 let audioContext = null;
 
 
-/**************************************************
- * PILIH SESI
- **************************************************/
+/*
+ * Menyimpan QR yang baru saja terbaca.
+ *
+ * Ini menggantikan lock 1,8 detik.
+ *
+ * Siswa berikutnya bisa langsung discan.
+ */
+
+const recentCodes =
+  new Map();
+
+
+const SAME_QR_COOLDOWN =
+  900;
+
+
+/* =================================================
+   PILIH SESI
+   ================================================= */
 
 function selectSession(session) {
 
-  selectedSession = session;
+  selectedSession =
+    session;
 
 
   document
@@ -780,12 +908,14 @@ function selectSession(session) {
   refreshSummary();
 
 
-  if (scannerRunning) {
+  if (
+    scannerRunning
+  ) {
 
     setStatus(
-      "✓ Sesi diganti menjadi " +
+      "✓ " +
       session +
-      ". Siap scan."
+      " aktif. Siap scan."
     );
 
   } else {
@@ -801,9 +931,9 @@ function selectSession(session) {
 }
 
 
-/**************************************************
- * STATUS
- **************************************************/
+/* =================================================
+   STATUS
+   ================================================= */
 
 function setStatus(
   message,
@@ -827,9 +957,9 @@ function setStatus(
 }
 
 
-/**************************************************
- * AUDIO BEEP
- **************************************************/
+/* =================================================
+   BEEP
+   ================================================= */
 
 function beep(
   frequency = 1000,
@@ -860,11 +990,13 @@ function beep(
 
 
     const oscillator =
-      audioContext.createOscillator();
+      audioContext
+        .createOscillator();
 
 
     const gain =
-      audioContext.createGain();
+      audioContext
+        .createGain();
 
 
     oscillator.type =
@@ -879,7 +1011,10 @@ function beep(
       0.08;
 
 
-    oscillator.connect(gain);
+    oscillator.connect(
+      gain
+    );
+
 
     gain.connect(
       audioContext.destination
@@ -903,9 +1038,9 @@ function beep(
 }
 
 
-/**************************************************
- * TAMPILKAN SISWA
- **************************************************/
+/* =================================================
+   SISWA
+   ================================================= */
 
 function showStudent(
   name,
@@ -947,10 +1082,6 @@ function showStudent(
 }
 
 
-/**************************************************
- * SEMBUNYIKAN SISWA
- **************************************************/
-
 function hideStudent() {
 
   document
@@ -963,9 +1094,9 @@ function hideStudent() {
 }
 
 
-/**************************************************
- * JSONP
- **************************************************/
+/* =================================================
+   JSONP API
+   ================================================= */
 
 function callApi(
   params
@@ -994,11 +1125,29 @@ function callApi(
         );
 
 
+      let finished =
+        false;
+
+
       const timeout =
         setTimeout(
           () => {
 
+            if (
+              finished
+            ) {
+
+              return;
+
+            }
+
+
+            finished =
+              true;
+
+
             cleanup();
+
 
             reject(
               new Error(
@@ -1007,7 +1156,7 @@ function callApi(
             );
 
           },
-          15000
+          12000
         );
 
 
@@ -1018,9 +1167,13 @@ function callApi(
         );
 
 
-        delete window[
-          callbackName
-        ];
+        try {
+
+          delete window[
+            callbackName
+          ];
+
+        } catch (e) {}
 
 
         if (
@@ -1042,9 +1195,25 @@ function callApi(
       ] =
       function(data) {
 
+        if (
+          finished
+        ) {
+
+          return;
+
+        }
+
+
+        finished =
+          true;
+
+
         cleanup();
 
-        resolve(data);
+
+        resolve(
+          data
+        );
 
       };
 
@@ -1081,7 +1250,21 @@ function callApi(
       script.onerror =
       function() {
 
+        if (
+          finished
+        ) {
+
+          return;
+
+        }
+
+
+        finished =
+          true;
+
+
         cleanup();
+
 
         reject(
           new Error(
@@ -1102,16 +1285,22 @@ function callApi(
 }
 
 
-/**************************************************
- * SCAN BERHASIL
- **************************************************/
+/* =================================================
+   SCAN SUCCESS
+   ================================================= */
 
 function onScanSuccess(
   decodedText
 ) {
 
+  const code =
+    String(
+      decodedText || ""
+    ).trim();
+
+
   if (
-    processingScan
+    !code
   ) {
 
     return;
@@ -1140,37 +1329,97 @@ function onScanSuccess(
   }
 
 
-  processingScan =
-    true;
+  /*
+   * Cegah QR yang sama diproses
+   * berkali-kali oleh beberapa frame.
+   */
+
+  const now =
+    Date.now();
 
 
-  recordAttendance(
-    decodedText.trim()
+  const lastTime =
+    recentCodes.get(
+      code
+    );
+
+
+  if (
+    lastTime &&
+    now - lastTime <
+    SAME_QR_COOLDOWN
+  ) {
+
+    return;
+
+  }
+
+
+  recentCodes.set(
+    code,
+    now
   );
 
 
   /*
-   * Kunci sementara agar satu QR
-   * tidak terbaca berkali-kali
-   * oleh frame kamera.
+   * Bersihkan data lama
    */
 
-  setTimeout(
-    () => {
+  if (
+    recentCodes.size >
+    50
+  ) {
 
-      processingScan =
-        false;
+    for (
+      const [
+        key,
+        time
+      ] of recentCodes
+    ) {
 
-    },
-    1800
+      if (
+        now - time >
+        10000
+      ) {
+
+        recentCodes.delete(
+          key
+        );
+
+      }
+
+    }
+
+  }
+
+
+  /*
+   * BEEP LANGSUNG
+   *
+   * Ini membuat pengalaman scan
+   * terasa seperti scanner QRIS.
+   */
+
+  beep(
+    1100,
+    85
+  );
+
+
+  /*
+   * Langsung kirim ke server.
+   */
+
+  recordAttendance(
+    code
   );
 
 }
 
 
-/**************************************************
- * CATAT PRESENSI
- **************************************************/
+/* =================================================
+   CATAT PRESENSI
+   ================================================= */
 
 async function recordAttendance(
   code
@@ -1179,9 +1428,7 @@ async function recordAttendance(
   try {
 
     setStatus(
-      "Memeriksa " +
-      code +
-      "...",
+      "✓ QR terdeteksi • Memproses...",
       ""
     );
 
@@ -1201,17 +1448,21 @@ async function recordAttendance(
       });
 
 
-    /**********************************************
-     * BERHASIL
-     **********************************************/
+    /* =============================================
+       BERHASIL
+       ============================================= */
 
     if (
       result.ok
     ) {
 
+      /*
+       * BEEP SUKSES
+       */
+
       beep(
         1500,
-        140
+        100
       );
 
 
@@ -1225,18 +1476,23 @@ async function recordAttendance(
       setStatus(
         "✓ " +
         result.name +
-        " — HADIR " +
-        result.session,
+        " — HADIR",
         "success"
       );
 
 
-      refreshSummary();
+      /*
+       * UPDATE STATISTIK SECARA LOKAL
+       *
+       * Tidak perlu request summary
+       * kedua ke server.
+       */
+
+      incrementLocalSummary();
 
 
       /*
-       * Setelah 1,8 detik
-       * siap menerima siswa berikutnya.
+       * Langsung siap scan siswa berikutnya.
        */
 
       setTimeout(
@@ -1253,7 +1509,7 @@ async function recordAttendance(
           }
 
         },
-        1800
+        350
       );
 
 
@@ -1262,9 +1518,9 @@ async function recordAttendance(
     }
 
 
-    /**********************************************
-     * DUPLIKAT
-     **********************************************/
+    /* =============================================
+       DUPLIKAT
+       ============================================= */
 
     if (
       result.duplicate
@@ -1272,7 +1528,7 @@ async function recordAttendance(
 
       beep(
         500,
-        220
+        180
       );
 
 
@@ -1298,19 +1554,22 @@ async function recordAttendance(
     }
 
 
-    /**********************************************
-     * QR TIDAK VALID
-     **********************************************/
+    /* =============================================
+       ERROR / QR TIDAK VALID
+       ============================================= */
 
     beep(
       300,
-      220
+      180
     );
 
 
     setStatus(
       "❌ " +
-      result.message,
+      (
+        result.message ||
+        "QR tidak valid."
+      ),
       "error"
     );
 
@@ -1324,7 +1583,7 @@ async function recordAttendance(
 
     beep(
       250,
-      250
+      220
     );
 
 
@@ -1338,9 +1597,107 @@ async function recordAttendance(
 }
 
 
-/**************************************************
- * MULAI KAMERA
- **************************************************/
+/* =================================================
+   STATISTIK LOKAL
+   ================================================= */
+
+function incrementLocalSummary() {
+
+  const hadirElement =
+    document.getElementById(
+      "hadir"
+    );
+
+
+  const belumElement =
+    document.getElementById(
+      "belum"
+    );
+
+
+  const totalElement =
+    document.getElementById(
+      "total"
+    );
+
+
+  const total =
+    Number(
+      totalElement.textContent
+    ) || 31;
+
+
+  let hadir =
+    Number(
+      hadirElement.textContent
+    );
+
+
+  let belum =
+    Number(
+      belumElement.textContent
+    );
+
+
+  if (
+    isNaN(hadir)
+  ) {
+
+    hadir = 0;
+
+  }
+
+
+  if (
+    isNaN(belum)
+  ) {
+
+    belum =
+      Math.max(
+        0,
+        total - hadir
+      );
+
+  }
+
+
+  /*
+   * Jangan sampai lebih dari total.
+   */
+
+  if (
+    hadir <
+    total
+  ) {
+
+    hadir++;
+
+    belum =
+      Math.max(
+        0,
+        total - hadir
+      );
+
+  }
+
+
+  hadirElement.textContent =
+    hadir;
+
+
+  belumElement.textContent =
+    belum;
+
+
+  totalElement.textContent =
+    total;
+
+}
+
+
+/* =================================================
+   MULAI KAMERA
+   ================================================= */
 
 async function startCamera() {
 
@@ -1371,6 +1728,11 @@ async function startCamera() {
   hideStudent();
 
 
+  /*
+   * Audio harus diaktifkan
+   * setelah interaksi pengguna.
+   */
+
   try {
 
     audioContext =
@@ -1398,9 +1760,42 @@ async function startCamera() {
   );
 
 
+  /*
+   * Hapus scanner lama
+   */
+
+  if (
+    scanner
+  ) {
+
+    try {
+
+      await scanner.clear();
+
+    } catch (e) {}
+
+  }
+
+
+  /*
+   * QR ONLY
+   *
+   * BarcodeDetector digunakan bila
+   * browser mendukung.
+   */
+
   scanner =
     new Html5Qrcode(
-      "reader"
+      "reader",
+      {
+        formatsToSupport:
+          [
+            Html5QrcodeSupportedFormats.QR_CODE
+          ],
+
+        useBarCodeDetectorIfSupported:
+          true
+      }
     );
 
 
@@ -1411,45 +1806,45 @@ async function startCamera() {
       {
         facingMode:
           {
-            exact:
+            ideal:
               "environment"
+          },
+
+        width:
+          {
+            ideal:
+              1280
+          },
+
+        height:
+          {
+            ideal:
+              720
           }
+
       },
 
       {
 
-        fps: 12,
+        /*
+         * 15 frame/detik.
+         *
+         * Lebih responsif daripada 12.
+         */
 
-        qrbox:
-          function(
-            width,
-            height
-          ) {
-
-            const size =
-              Math.floor(
-                Math.min(
-                  width,
-                  height
-                ) *
-                0.68
-              );
+        fps: 15,
 
 
-            return {
-
-              width:
-                size,
-
-              height:
-                size
-
-            };
-
-          },
+        /*
+         * SENGAJA TIDAK ADA qrbox.
+         *
+         * Seluruh area video digunakan
+         * untuk mencari QR.
+         */
 
         aspectRatio:
-          1.0,
+          undefined,
+
 
         disableFlip:
           false
@@ -1485,10 +1880,19 @@ async function startCamera() {
       "block";
 
 
+    document
+      .getElementById(
+        "scanGuide"
+      )
+      .style
+      .display =
+      "block";
+
+
     setStatus(
       "📷 " +
       selectedSession +
-      " aktif. Arahkan ke QR siswa."
+      " aktif. Arahkan kamera ke QR."
     );
 
 
@@ -1499,12 +1903,9 @@ async function startCamera() {
     );
 
 
-    try {
-
-      await scanner.stop();
-
-    } catch (e) {}
-
+    /*
+     * Fallback kamera sederhana.
+     */
 
     try {
 
@@ -1515,7 +1916,13 @@ async function startCamera() {
 
     scanner =
       new Html5Qrcode(
-        "reader"
+        "reader",
+        {
+          formatsToSupport:
+            [
+              Html5QrcodeSupportedFormats.QR_CODE
+            ]
+        }
       );
 
 
@@ -1532,11 +1939,9 @@ async function startCamera() {
 
           fps: 12,
 
-          qrbox:
-            {
-              width: 250,
-              height: 250
-            },
+          /*
+           * Tetap tanpa qrbox.
+           */
 
           disableFlip:
             false
@@ -1572,10 +1977,19 @@ async function startCamera() {
         "block";
 
 
+      document
+        .getElementById(
+          "scanGuide"
+        )
+        .style
+        .display =
+        "block";
+
+
       setStatus(
         "📷 " +
         selectedSession +
-        " aktif. Arahkan ke QR siswa."
+        " aktif. Arahkan kamera ke QR."
       );
 
 
@@ -1598,13 +2012,15 @@ async function startCamera() {
 }
 
 
-/**************************************************
- * STOP KAMERA
- **************************************************/
+/* =================================================
+   STOP KAMERA
+   ================================================= */
 
 async function stopCamera() {
 
-  if (!scanner) {
+  if (
+    !scanner
+  ) {
 
     return;
 
@@ -1653,6 +2069,15 @@ async function stopCamera() {
     "none";
 
 
+  document
+    .getElementById(
+      "scanGuide"
+    )
+    .style
+    .display =
+    "none";
+
+
   setStatus(
     "Kamera dihentikan."
   );
@@ -1660,9 +2085,9 @@ async function stopCamera() {
 }
 
 
-/**************************************************
- * UPDATE JUMLAH HADIR
- **************************************************/
+/* =================================================
+   SUMMARY
+   ================================================= */
 
 async function refreshSummary() {
 
@@ -1684,6 +2109,14 @@ async function refreshSummary() {
       )
       .textContent =
       "-";
+
+
+    document
+      .getElementById(
+        "total"
+      )
+      .textContent =
+      "31";
 
 
     return;
@@ -1740,6 +2173,7 @@ async function refreshSummary() {
 }
 
 </script>
+
 
 </body>
 
