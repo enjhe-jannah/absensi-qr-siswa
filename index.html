@@ -1,26 +1,28 @@
-\<!DOCTYPE html>
-\<html lang="id">
+<!DOCTYPE html>
+<html lang="id">
 
-\<head>
+<head>
 
-  \<meta charset="UTF-8">
+  <meta charset="UTF-8">
 
-  \<meta
+  <meta
     name="viewport"
     content="width=device-width, initial-scale=1, viewport-fit=cover"
-  \>
+  >
 
-  \<title>Presensi Sholat XII MIA 2\</title>
+  <title>Presensi Sholat XII MIA 2</title>
 
-  \<script src="[https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js](https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js)">\</script>
+  <script
+    src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"
+  ></script>
 
 
+  <style>
 
-  \<style>
-
-    \* {
+    * {
       box-sizing: border-box;
     }
+
 
     body {
 
@@ -40,7 +42,6 @@
     }
 
 
-
     .container {
 
       width: 100%;
@@ -49,10 +50,9 @@
 
       margin: auto;
 
-      padding: 14px;
+      padding: 10px;
 
     }
-
 
 
     .card {
@@ -61,13 +61,12 @@
 
       border-radius: 26px;
 
-      padding: 20px;
+      padding: 18px;
 
       box-shadow:
         0 8px 30px rgba(0,0,0,0.08);
 
     }
-
 
 
     h1 {
@@ -83,7 +82,6 @@
     }
 
 
-
     .subtitle {
 
       margin-top: 5px;
@@ -95,14 +93,13 @@
     }
 
 
-
-    /\* =========================================
-       PILIH SESI
-       \========================================= \*/
+    /* =========================================
+       SESI
+       ========================================= */
 
     .session-title {
 
-      margin-top: 20px;
+      margin-top: 18px;
 
       margin-bottom: 10px;
 
@@ -115,7 +112,6 @@
     }
 
 
-
     .sessions {
 
       display: grid;
@@ -125,7 +121,6 @@
       gap: 10px;
 
     }
-
 
 
     .session-button {
@@ -146,8 +141,9 @@
 
       cursor: pointer;
 
-    }
+      transition: .15s;
 
+    }
 
 
     .session-button.active {
@@ -161,7 +157,6 @@
     }
 
 
-
     .session-icon {
 
       display: block;
@@ -173,10 +168,9 @@
     }
 
 
-
-    /\* =========================================
+    /* =========================================
        STATISTIK
-       \========================================= \*/
+       ========================================= */
 
     .stats {
 
@@ -186,10 +180,9 @@
 
       gap: 9px;
 
-      margin: 17px 0;
+      margin: 16px 0;
 
     }
-
 
 
     .stat {
@@ -198,12 +191,11 @@
 
       border-radius: 17px;
 
-      padding: 12px 4px;
+      padding: 11px 4px;
 
       text-align: center;
 
     }
-
 
 
     .stat-number {
@@ -219,7 +211,6 @@
     }
 
 
-
     .stat-label {
 
       display: block;
@@ -233,12 +224,13 @@
     }
 
 
-
-    /\* =========================================
+    /* =========================================
        CAMERA
-       \========================================= \*/
+       ========================================= */
 
     .camera-box {
+
+      position: relative;
 
       border-radius: 20px;
 
@@ -246,35 +238,128 @@
 
       background: #111;
 
+      width: 100%;
+
       min-height: 280px;
 
     }
 
 
-
-    \#reader {
+    #reader {
 
       width: 100%;
+
+      min-height: 280px;
+
+      position: relative;
 
     }
 
 
-
-    \#reader video {
+    #reader video {
 
       width: 100% !important;
 
       height: auto !important;
+
+      min-height: 280px;
+
+      object-fit: contain !important;
+
+      display: block;
 
       border-radius: 20px;
 
     }
 
 
+    /*
+     * Panduan visual saja.
+     *
+     * BUKAN batas scanner.
+     *
+     * Scanner sebenarnya membaca seluruh
+     * area video.
+     */
 
-    /\* =========================================
+    .scan-guide {
+
+      position: absolute;
+
+      left: 8%;
+
+      right: 8%;
+
+      top: 8%;
+
+      bottom: 8%;
+
+      border: 3px solid rgba(255,255,255,.85);
+
+      border-radius: 22px;
+
+      pointer-events: none;
+
+      z-index: 20;
+
+      box-shadow:
+        0 0 0 9999px rgba(0,0,0,.12);
+
+    }
+
+
+    .scan-guide::before {
+
+      content: "";
+
+      position: absolute;
+
+      left: 50%;
+
+      top: 50%;
+
+      width: 55px;
+
+      height: 55px;
+
+      transform:
+        translate(-50%, -50%);
+
+      border:
+        2px solid rgba(255,255,255,.55);
+
+      border-radius: 10px;
+
+    }
+
+
+    .scan-guide-text {
+
+      position: absolute;
+
+      left: 0;
+
+      right: 0;
+
+      bottom: -38px;
+
+      text-align: center;
+
+      color: white;
+
+      font-size: 12px;
+
+      font-weight: 700;
+
+      text-shadow:
+        0 1px 3px #000;
+
+    }
+
+
+    /* =========================================
        BUTTON
-       \========================================= \*/
+       ========================================= */
 
     .button {
 
@@ -301,13 +386,11 @@
     }
 
 
-
-    .button\:active {
+    .button:active {
 
       transform: scale(.98);
 
     }
-
 
 
     .button.secondary {
@@ -319,16 +402,15 @@
     }
 
 
-
-    /\* =========================================
+    /* =========================================
        STATUS
-       \========================================= \*/
+       ========================================= */
 
     .status {
 
       margin-top: 14px;
 
-      padding: 17px;
+      padding: 15px;
 
       border-radius: 18px;
 
@@ -342,7 +424,7 @@
 
       font-weight: 600;
 
-      min-height: 58px;
+      min-height: 56px;
 
       display: flex;
 
@@ -351,7 +433,6 @@
       justify-content: center;
 
     }
-
 
 
     .status.success {
@@ -363,7 +444,6 @@
     }
 
 
-
     .status.warning {
 
       background: #fff0d7;
@@ -371,7 +451,6 @@
       color: #8a5a00;
 
     }
-
 
 
     .status.error {
@@ -383,10 +462,9 @@
     }
 
 
-
-    /\* =========================================
+    /* =========================================
        SISWA
-       \========================================= \*/
+       ========================================= */
 
     .student {
 
@@ -394,7 +472,7 @@
 
       margin-top: 13px;
 
-      padding: 18px;
+      padding: 17px;
 
       border-radius: 20px;
 
@@ -407,13 +485,11 @@
     }
 
 
-
     .student.show {
 
       display: block;
 
     }
-
 
 
     .student-label {
@@ -425,17 +501,15 @@
     }
 
 
-
     .student-name {
 
       margin-top: 4px;
 
-      font-size: 24px;
+      font-size: 23px;
 
       font-weight: 800;
 
     }
-
 
 
     .student-class {
@@ -447,7 +521,6 @@
       opacity: .9;
 
     }
-
 
 
     .student-session {
@@ -463,10 +536,9 @@
     }
 
 
-
     .info {
 
-      margin-top: 16px;
+      margin-top: 15px;
 
       font-size: 12px;
 
@@ -479,18 +551,17 @@
     }
 
 
-
     @media (max-width: 450px) {
 
       .container {
 
-        padding: 10px;
+        padding: 8px;
 
       }
 
       .card {
 
-        padding: 16px;
+        padding: 15px;
 
       }
 
@@ -508,292 +579,291 @@
 
     }
 
-  \</style>
+  </style>
 
-\</head>
-
-
-
-\<body>
+</head>
 
 
-
-\<div class="container">
-
-  \<div class="card">
+<body>
 
 
+<div class="container">
 
-    \<!-- HEADER -->
+  <div class="card">
 
-    \<h1>
+
+    <!-- HEADER -->
+
+    <h1>
       Presensi Sholat
-    \</h1>
+    </h1>
 
-    \<div class="subtitle">
+    <div class="subtitle">
       Kelas XII MIA 2 • 31 Siswa
-    \</div>
+    </div>
 
 
+    <!-- SESI -->
 
-    \<!-- PILIH SESI -->
-
-    \<div class="session-title">
+    <div class="session-title">
       PILIH SESI PRESENSI
-    \</div>
+    </div>
 
 
+    <div class="sessions">
 
-    \<div class="sessions">
-
-
-
-      \<button
+      <button
         id="dzuhurButton"
         class="session-button"
         onclick="selectSession('Sholat Dzuhur')"
-      \>
+      >
 
-        \<span class="session-icon">
+        <span class="session-icon">
           🕌
-        \</span>
+        </span>
 
         Sholat Dzuhur
 
-      \</button>
+      </button>
 
 
-
-      \<button
+      <button
         id="asharButton"
         class="session-button"
         onclick="selectSession('Sholat Ashar')"
-      \>
+      >
 
-        \<span class="session-icon">
+        <span class="session-icon">
           🌇
-        \</span>
+        </span>
 
         Sholat Ashar
 
-      \</button>
+      </button>
+
+    </div>
 
 
+    <!-- STATISTIK -->
 
-    \</div>
+    <div class="stats">
 
+      <div class="stat">
 
-
-    \<!-- STATISTIK -->
-
-    \<div class="stats">
-
-      \<div class="stat">
-
-        \<span
+        <span
           id="hadir"
           class="stat-number"
-        \>
-          \-
-        \</span>
+        >
+          -
+        </span>
 
-        \<span class="stat-label">
+        <span class="stat-label">
           Hadir
-        \</span>
+        </span>
 
-      \</div>
+      </div>
 
 
+      <div class="stat">
 
-      \<div class="stat">
-
-        \<span
+        <span
           id="belum"
           class="stat-number"
-        \>
-          \-
-        \</span>
+        >
+          -
+        </span>
 
-        \<span class="stat-label">
+        <span class="stat-label">
           Belum
-        \</span>
+        </span>
 
-      \</div>
+      </div>
 
 
+      <div class="stat">
 
-      \<div class="stat">
-
-        \<span
+        <span
           id="total"
           class="stat-number"
-        \>
+        >
           31
-        \</span>
+        </span>
 
-        \<span class="stat-label">
+        <span class="stat-label">
           Total
-        \</span>
+        </span>
 
-      \</div>
+      </div>
 
-    \</div>
-
-
-
-    \<!-- CAMERA -->
-
-    \<div class="camera-box">
-
-      \<div id="reader">\</div>
-
-    \</div>
+    </div>
 
 
+    <!-- CAMERA -->
 
-    \<!-- MULAI -->
+    <div class="camera-box">
 
-    \<button
+      <div id="reader"></div>
+
+      <div
+        id="scanGuide"
+        class="scan-guide"
+        style="display:none;"
+      >
+
+        <div class="scan-guide-text">
+          Arahkan QR ke area ini — tidak perlu memenuhi layar
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- START -->
+
+    <button
       id="startButton"
       class="button"
       onclick="startCamera()"
-    \>
+    >
 
       📷 Mulai Kamera
 
-    \</button>
+    </button>
 
 
+    <!-- STOP -->
 
-    \<!-- STOP -->
-
-    \<button
+    <button
       id="stopButton"
       class="button secondary"
       onclick="stopCamera()"
-      style="display\:none;"
-    \>
+      style="display:none;"
+    >
 
       ⏹️ Hentikan Kamera
 
-    \</button>
+    </button>
 
 
+    <!-- STATUS -->
 
-    \<!-- STATUS -->
-
-    \<div
+    <div
       id="status"
       class="status"
-    \>
+    >
 
       Pilih sesi terlebih dahulu.
 
-    \</div>
+    </div>
 
 
+    <!-- SISWA -->
 
-    \<!-- SISWA -->
-
-    \<div
+    <div
       id="student"
       class="student"
-    \>
+    >
 
-      \<div class="student-label">
+      <div class="student-label">
         SISWA TERDETEKSI
-      \</div>
+      </div>
 
 
-
-      \<div
+      <div
         id="studentName"
         class="student-name"
-      \>
-        \-
-      \</div>
+      >
+        -
+      </div>
 
 
-
-      \<div
+      <div
         id="studentClass"
         class="student-class"
-      \>
+      >
         XII MIA 2
-      \</div>
+      </div>
 
 
-
-      \<div
+      <div
         id="studentSession"
         class="student-session"
-      \>
-        \-
-      \</div>
+      >
+        -
+      </div>
 
-    \</div>
+    </div>
 
 
-
-    \<div class="info">
+    <div class="info">
 
       Setiap siswa dapat presensi
-      \<b>1× Sholat Dzuhur\</b> dan
-      \<b>1× Sholat Ashar\</b>
+      <b>1× Sholat Dzuhur</b> dan
+      <b>1× Sholat Ashar</b>
       setiap hari.
 
-      \<br>
+      <br>
 
       Scan kedua pada sesi yang sama
       otomatis ditolak.
 
-    \</div>
+    </div>
 
 
+  </div>
 
-  \</div>
-
-\</div>
-
+</div>
 
 
-\<script>
+<script>
 
 
+/* =================================================
+   KONFIGURASI
+   ================================================= */
 
-/\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*
- \* KONFIGURASI
- \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*/
-
-const API\_URL =
-  "[https://script.google.com/macros/s/AKfycbytJl0gE1YIkkFfI8NUHsX\_YhKyhiWlrfRUXCEMzhDqAMfYuQRldhOP6x9PrLc1sa86/exec](https://script.google.com/macros/s/AKfycbytJl0gE1YIkkFfI8NUHsX_YhKyhiWlrfRUXCEMzhDqAMfYuQRldhOP6x9PrLc1sa86/exec)";
-
+const API_URL =
+  "https://script.google.com/macros/s/AKfycbytJl0gE1YIkkFfI8NUHsX_YhKyhiWlrfRUXCEMzhDqAMfYuQRldhOP6x9PrLc1sa86/exec";
 
 
-/\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*
- \* VARIABEL
- \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*/
+/* =================================================
+   VARIABEL
+   ================================================= */
 
 let scanner = null;
 
 let scannerRunning = false;
-
-let processingScan = false;
 
 let selectedSession = "";
 
 let audioContext = null;
 
 
+/*
+ * Menyimpan QR yang baru saja terbaca.
+ *
+ * Ini menggantikan lock 1,8 detik.
+ *
+ * Siswa berikutnya bisa langsung discan.
+ */
 
-/\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*
- \* PILIH SESI
- \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*/
+const recentCodes =
+  new Map();
+
+
+const SAME_QR_COOLDOWN =
+  900;
+
+
+/* =================================================
+   PILIH SESI
+   ================================================= */
 
 function selectSession(session) {
 
-  selectedSession = session;
-
+  selectedSession =
+    session;
 
 
   document
@@ -802,12 +872,10 @@ function selectSession(session) {
     .remove("active");
 
 
-
   document
     .getElementById("asharButton")
     .classList
     .remove("active");
-
 
 
   if (
@@ -822,7 +890,6 @@ function selectSession(session) {
   }
 
 
-
   if (
     session === "Sholat Ashar"
   ) {
@@ -835,21 +902,20 @@ function selectSession(session) {
   }
 
 
-
   hideStudent();
-
 
 
   refreshSummary();
 
 
-
-  if (scannerRunning) {
+  if (
+    scannerRunning
+  ) {
 
     setStatus(
-      "✓ Sesi diganti menjadi " +
+      "✓ " +
       session +
-      ". Siap scan."
+      " aktif. Siap scan."
     );
 
   } else {
@@ -865,10 +931,9 @@ function selectSession(session) {
 }
 
 
-
-/\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*
- \* STATUS
- \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*/
+/* =================================================
+   STATUS
+   ================================================= */
 
 function setStatus(
   message,
@@ -881,10 +946,8 @@ function setStatus(
     );
 
 
-
   element.textContent =
     message;
-
 
 
   element.className =
@@ -894,10 +957,9 @@ function setStatus(
 }
 
 
-
-/\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*
- \* AUDIO BEEP
- \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*/
+/* =================================================
+   BEEP
+   ================================================= */
 
 function beep(
   frequency = 1000,
@@ -910,12 +972,11 @@ function beep(
 
       audioContext =
         new (
-          window\.AudioContext ||
-          window\.webkitAudioContext
+          window.AudioContext ||
+          window.webkitAudioContext
         )();
 
     }
-
 
 
     if (
@@ -928,42 +989,39 @@ function beep(
     }
 
 
-
     const oscillator =
-      audioContext.createOscillator();
-
+      audioContext
+        .createOscillator();
 
 
     const gain =
-      audioContext.createGain();
-
+      audioContext
+        .createGain();
 
 
     oscillator.type =
       "sine";
 
 
-
     oscillator.frequency.value =
       frequency;
-
 
 
     gain.gain.value =
       0.08;
 
 
+    oscillator.connect(
+      gain
+    );
 
-    oscillator.connect(gain);
 
     gain.connect(
       audioContext.destination
     );
 
 
-
     oscillator.start();
-
 
 
     oscillator.stop(
@@ -980,10 +1038,9 @@ function beep(
 }
 
 
-
-/\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*
- \* TAMPILKAN SISWA
- \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*/
+/* =================================================
+   SISWA
+   ================================================= */
 
 function showStudent(
   name,
@@ -999,7 +1056,6 @@ function showStudent(
     name;
 
 
-
   document
     .getElementById(
       "studentClass"
@@ -1008,14 +1064,12 @@ function showStudent(
     className;
 
 
-
   document
     .getElementById(
       "studentSession"
     )
     .textContent =
     session;
-
 
 
   document
@@ -1027,11 +1081,6 @@ function showStudent(
 
 }
 
-
-
-/\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*
- \* SEMBUNYIKAN SISWA
- \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*/
 
 function hideStudent() {
 
@@ -1045,10 +1094,9 @@ function hideStudent() {
 }
 
 
-
-/\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*
- \* JSONP
- \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*/
+/* =================================================
+   JSONP API
+   ================================================= */
 
 function callApi(
   params
@@ -1061,16 +1109,14 @@ function callApi(
     ) => {
 
 
-
       const callbackName =
-        "jsonp\_" +
+        "jsonp_" +
         Date.now() +
-        "\_" +
+        "_" +
         Math.floor(
-          Math.random() \*
+          Math.random() *
           100000
         );
-
 
 
       const script =
@@ -1079,12 +1125,29 @@ function callApi(
         );
 
 
+      let finished =
+        false;
+
 
       const timeout =
         setTimeout(
           () => {
 
+            if (
+              finished
+            ) {
+
+              return;
+
+            }
+
+
+            finished =
+              true;
+
+
             cleanup();
+
 
             reject(
               new Error(
@@ -1093,9 +1156,8 @@ function callApi(
             );
 
           },
-          15000
+          12000
         );
-
 
 
       function cleanup() {
@@ -1105,11 +1167,13 @@ function callApi(
         );
 
 
+        try {
 
-        delete window[
-          callbackName
-        ];
+          delete window[
+            callbackName
+          ];
 
+        } catch (e) {}
 
 
         if (
@@ -1126,23 +1190,36 @@ function callApi(
       }
 
 
-
       window[
         callbackName
       ] =
       function(data) {
 
+        if (
+          finished
+        ) {
+
+          return;
+
+        }
+
+
+        finished =
+          true;
+
+
         cleanup();
 
-        resolve(data);
+
+        resolve(
+          data
+        );
 
       };
 
 
-
       const query =
         new URLSearchParams();
-
 
 
       Object.keys(params)
@@ -1158,25 +1235,36 @@ function callApi(
         );
 
 
-
       query.append(
         "callback",
         callbackName
       );
 
 
-
       script.src =
-        API\_URL +
+        API_URL +
         "?" +
         query.toString();
-
 
 
       script.onerror =
       function() {
 
+        if (
+          finished
+        ) {
+
+          return;
+
+        }
+
+
+        finished =
+          true;
+
+
         cleanup();
+
 
         reject(
           new Error(
@@ -1185,7 +1273,6 @@ function callApi(
         );
 
       };
-
 
 
       document.body.appendChild(
@@ -1198,23 +1285,27 @@ function callApi(
 }
 
 
-
-/\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*
- \* SCAN BERHASIL
- \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*/
+/* =================================================
+   SCAN SUCCESS
+   ================================================= */
 
 function onScanSuccess(
   decodedText
 ) {
 
+  const code =
+    String(
+      decodedText || ""
+    ).trim();
+
+
   if (
-    processingScan
+    !code
   ) {
 
     return;
 
   }
-
 
 
   if (
@@ -1227,12 +1318,10 @@ function onScanSuccess(
     );
 
 
-
     setStatus(
       "⚠️ Pilih sesi Dzuhur atau Ashar terlebih dahulu.",
       "warning"
     );
-
 
 
     return;
@@ -1240,41 +1329,97 @@ function onScanSuccess(
   }
 
 
+  /*
+   * Cegah QR yang sama diproses
+   * berkali-kali oleh beberapa frame.
+   */
 
-  processingScan =
-    true;
+  const now =
+    Date.now();
 
 
+  const lastTime =
+    recentCodes.get(
+      code
+    );
 
-  recordAttendance(
-    decodedText.trim()
+
+  if (
+    lastTime &&
+    now - lastTime <
+    SAME_QR_COOLDOWN
+  ) {
+
+    return;
+
+  }
+
+
+  recentCodes.set(
+    code,
+    now
   );
 
 
+  /*
+   * Bersihkan data lama
+   */
 
-  /\*
-   \* Kunci sementara agar satu QR
-   \* tidak terbaca berkali-kali
-   \* oleh frame kamera.
-   \*/
+  if (
+    recentCodes.size >
+    50
+  ) {
 
-  setTimeout(
-    () => {
+    for (
+      const [
+        key,
+        time
+      ] of recentCodes
+    ) {
 
-      processingScan =
-        false;
+      if (
+        now - time >
+        10000
+      ) {
 
-    },
-    1800
+        recentCodes.delete(
+          key
+        );
+
+      }
+
+    }
+
+  }
+
+
+  /*
+   * BEEP LANGSUNG
+   *
+   * Ini membuat pengalaman scan
+   * terasa seperti scanner QRIS.
+   */
+
+  beep(
+    1100,
+    85
+  );
+
+
+  /*
+   * Langsung kirim ke server.
+   */
+
+  recordAttendance(
+    code
   );
 
 }
 
 
-
-/\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*
- \* CATAT PRESENSI
- \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*/
+/* =================================================
+   CATAT PRESENSI
+   ================================================= */
 
 async function recordAttendance(
   code
@@ -1283,12 +1428,9 @@ async function recordAttendance(
   try {
 
     setStatus(
-      "Memeriksa " +
-      code +
-      "...",
+      "✓ QR terdeteksi • Memproses...",
       ""
     );
-
 
 
     const result =
@@ -1306,20 +1448,22 @@ async function recordAttendance(
       });
 
 
-
-    /\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*
-     \* BERHASIL
-     \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*/
+    /* =============================================
+       BERHASIL
+       ============================================= */
 
     if (
       result.ok
     ) {
 
+      /*
+       * BEEP SUKSES
+       */
+
       beep(
         1500,
-        140
+        100
       );
-
 
 
       showStudent(
@@ -1329,25 +1473,27 @@ async function recordAttendance(
       );
 
 
-
       setStatus(
         "✓ " +
         result.name +
-        " — HADIR " +
-        result.session,
+        " — HADIR",
         "success"
       );
 
 
+      /*
+       * UPDATE STATISTIK SECARA LOKAL
+       *
+       * Tidak perlu request summary
+       * kedua ke server.
+       */
 
-      refreshSummary();
+      incrementLocalSummary();
 
 
-
-      /\*
-       \* Setelah 1,8 detik
-       \* siap menerima siswa berikutnya.
-       \*/
+      /*
+       * Langsung siap scan siswa berikutnya.
+       */
 
       setTimeout(
         () => {
@@ -1363,9 +1509,8 @@ async function recordAttendance(
           }
 
         },
-        1800
+        350
       );
-
 
 
       return;
@@ -1373,10 +1518,9 @@ async function recordAttendance(
     }
 
 
-
-    /\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*
-     \* DUPLIKAT
-     \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*/
+    /* =============================================
+       DUPLIKAT
+       ============================================= */
 
     if (
       result.duplicate
@@ -1384,9 +1528,8 @@ async function recordAttendance(
 
       beep(
         500,
-        220
+        180
       );
-
 
 
       showStudent(
@@ -1394,7 +1537,6 @@ async function recordAttendance(
         result.className,
         result.session
       );
-
 
 
       setStatus(
@@ -1407,30 +1549,29 @@ async function recordAttendance(
       );
 
 
-
       return;
 
     }
 
 
-
-    /\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*
-     \* QR TIDAK VALID
-     \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*/
+    /* =============================================
+       ERROR / QR TIDAK VALID
+       ============================================= */
 
     beep(
       300,
-      220
+      180
     );
-
 
 
     setStatus(
       "❌ " +
-      result.message,
+      (
+        result.message ||
+        "QR tidak valid."
+      ),
       "error"
     );
-
 
 
   } catch (error) {
@@ -1440,12 +1581,10 @@ async function recordAttendance(
     );
 
 
-
     beep(
       250,
-      250
+      220
     );
-
 
 
     setStatus(
@@ -1458,10 +1597,107 @@ async function recordAttendance(
 }
 
 
+/* =================================================
+   STATISTIK LOKAL
+   ================================================= */
 
-/\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*
- \* MULAI KAMERA
- \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*/
+function incrementLocalSummary() {
+
+  const hadirElement =
+    document.getElementById(
+      "hadir"
+    );
+
+
+  const belumElement =
+    document.getElementById(
+      "belum"
+    );
+
+
+  const totalElement =
+    document.getElementById(
+      "total"
+    );
+
+
+  const total =
+    Number(
+      totalElement.textContent
+    ) || 31;
+
+
+  let hadir =
+    Number(
+      hadirElement.textContent
+    );
+
+
+  let belum =
+    Number(
+      belumElement.textContent
+    );
+
+
+  if (
+    isNaN(hadir)
+  ) {
+
+    hadir = 0;
+
+  }
+
+
+  if (
+    isNaN(belum)
+  ) {
+
+    belum =
+      Math.max(
+        0,
+        total - hadir
+      );
+
+  }
+
+
+  /*
+   * Jangan sampai lebih dari total.
+   */
+
+  if (
+    hadir <
+    total
+  ) {
+
+    hadir++;
+
+    belum =
+      Math.max(
+        0,
+        total - hadir
+      );
+
+  }
+
+
+  hadirElement.textContent =
+    hadir;
+
+
+  belumElement.textContent =
+    belum;
+
+
+  totalElement.textContent =
+    total;
+
+}
+
+
+/* =================================================
+   MULAI KAMERA
+   ================================================= */
 
 async function startCamera() {
 
@@ -1475,11 +1711,9 @@ async function startCamera() {
     );
 
 
-
     return;
 
   }
-
 
 
   if (
@@ -1491,20 +1725,22 @@ async function startCamera() {
   }
 
 
-
   hideStudent();
 
 
+  /*
+   * Audio harus diaktifkan
+   * setelah interaksi pengguna.
+   */
 
   try {
 
     audioContext =
       audioContext ||
       new (
-        window\.AudioContext ||
-        window\.webkitAudioContext
+        window.AudioContext ||
+        window.webkitAudioContext
       )();
-
 
 
     if (
@@ -1519,18 +1755,48 @@ async function startCamera() {
   } catch (error) {}
 
 
-
   setStatus(
     "Meminta akses kamera..."
   );
 
 
+  /*
+   * Hapus scanner lama
+   */
+
+  if (
+    scanner
+  ) {
+
+    try {
+
+      await scanner.clear();
+
+    } catch (e) {}
+
+  }
+
+
+  /*
+   * QR ONLY
+   *
+   * BarcodeDetector digunakan bila
+   * browser mendukung.
+   */
 
   scanner =
     new Html5Qrcode(
-      "reader"
-    );
+      "reader",
+      {
+        formatsToSupport:
+          [
+            Html5QrcodeSupportedFormats.QR_CODE
+          ],
 
+        useBarCodeDetectorIfSupported:
+          true
+      }
+    );
 
 
   try {
@@ -1540,46 +1806,45 @@ async function startCamera() {
       {
         facingMode:
           {
-            exact:
+            ideal:
               "environment"
+          },
+
+        width:
+          {
+            ideal:
+              1280
+          },
+
+        height:
+          {
+            ideal:
+              720
           }
+
       },
 
       {
 
-        fps: 12,
+        /*
+         * 15 frame/detik.
+         *
+         * Lebih responsif daripada 12.
+         */
 
-        qrbox:
-          function(
-            width,
-            height
-          ) {
-
-            const size =
-              Math.floor(
-                Math.min(
-                  width,
-                  height
-                ) \*
-                0.68
-              );
+        fps: 15,
 
 
-
-            return {
-
-              width:
-                size,
-
-              height:
-                size
-
-            };
-
-          },
+        /*
+         * SENGAJA TIDAK ADA qrbox.
+         *
+         * Seluruh area video digunakan
+         * untuk mencari QR.
+         */
 
         aspectRatio:
-          1.0,
+          undefined,
+
 
         disableFlip:
           false
@@ -1593,10 +1858,8 @@ async function startCamera() {
     );
 
 
-
     scannerRunning =
       true;
-
 
 
     document
@@ -1608,7 +1871,6 @@ async function startCamera() {
       "none";
 
 
-
     document
       .getElementById(
         "stopButton"
@@ -1618,13 +1880,20 @@ async function startCamera() {
       "block";
 
 
+    document
+      .getElementById(
+        "scanGuide"
+      )
+      .style
+      .display =
+      "block";
+
 
     setStatus(
       "📷 " +
       selectedSession +
-      " aktif. Arahkan ke QR siswa."
+      " aktif. Arahkan kamera ke QR."
     );
-
 
 
   } catch (error) {
@@ -1634,14 +1903,9 @@ async function startCamera() {
     );
 
 
-
-    try {
-
-      await scanner.stop();
-
-    } catch (e) {}
-
-
+    /*
+     * Fallback kamera sederhana.
+     */
 
     try {
 
@@ -1650,12 +1914,16 @@ async function startCamera() {
     } catch (e) {}
 
 
-
     scanner =
       new Html5Qrcode(
-        "reader"
+        "reader",
+        {
+          formatsToSupport:
+            [
+              Html5QrcodeSupportedFormats.QR_CODE
+            ]
+        }
       );
-
 
 
     try {
@@ -1671,11 +1939,9 @@ async function startCamera() {
 
           fps: 12,
 
-          qrbox:
-            {
-              width: 250,
-              height: 250
-            },
+          /*
+           * Tetap tanpa qrbox.
+           */
 
           disableFlip:
             false
@@ -1689,10 +1955,8 @@ async function startCamera() {
       );
 
 
-
       scannerRunning =
         true;
-
 
 
       document
@@ -1704,7 +1968,6 @@ async function startCamera() {
         "none";
 
 
-
       document
         .getElementById(
           "stopButton"
@@ -1714,13 +1977,20 @@ async function startCamera() {
         "block";
 
 
+      document
+        .getElementById(
+          "scanGuide"
+        )
+        .style
+        .display =
+        "block";
+
 
       setStatus(
         "📷 " +
         selectedSession +
-        " aktif. Arahkan ke QR siswa."
+        " aktif. Arahkan kamera ke QR."
       );
-
 
 
     } catch (fallbackError) {
@@ -1728,7 +1998,6 @@ async function startCamera() {
       console.error(
         fallbackError
       );
-
 
 
       setStatus(
@@ -1743,19 +2012,19 @@ async function startCamera() {
 }
 
 
-
-/\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*
- \* STOP KAMERA
- \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*/
+/* =================================================
+   STOP KAMERA
+   ================================================= */
 
 async function stopCamera() {
 
-  if (!scanner) {
+  if (
+    !scanner
+  ) {
 
     return;
 
   }
-
 
 
   try {
@@ -1771,7 +2040,6 @@ async function stopCamera() {
   } catch (error) {}
 
 
-
   try {
 
     await scanner.clear();
@@ -1779,10 +2047,8 @@ async function stopCamera() {
   } catch (error) {}
 
 
-
   scannerRunning =
     false;
-
 
 
   document
@@ -1794,7 +2060,6 @@ async function stopCamera() {
     "block";
 
 
-
   document
     .getElementById(
       "stopButton"
@@ -1804,6 +2069,14 @@ async function stopCamera() {
     "none";
 
 
+  document
+    .getElementById(
+      "scanGuide"
+    )
+    .style
+    .display =
+    "none";
+
 
   setStatus(
     "Kamera dihentikan."
@@ -1812,10 +2085,9 @@ async function stopCamera() {
 }
 
 
-
-/\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*
- \* UPDATE JUMLAH HADIR
- \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*/
+/* =================================================
+   SUMMARY
+   ================================================= */
 
 async function refreshSummary() {
 
@@ -1831,7 +2103,6 @@ async function refreshSummary() {
       "-";
 
 
-
     document
       .getElementById(
         "belum"
@@ -1840,11 +2111,17 @@ async function refreshSummary() {
       "-";
 
 
+    document
+      .getElementById(
+        "total"
+      )
+      .textContent =
+      "31";
+
 
     return;
 
   }
-
 
 
   try {
@@ -1861,7 +2138,6 @@ async function refreshSummary() {
       });
 
 
-
     document
       .getElementById(
         "hadir"
@@ -1870,14 +2146,12 @@ async function refreshSummary() {
       result.hadir;
 
 
-
     document
       .getElementById(
         "belum"
       )
       .textContent =
       result.belum;
-
 
 
     document
@@ -1898,8 +2172,9 @@ async function refreshSummary() {
 
 }
 
-\</script>
+</script>
 
-\</body>
 
-\</html>
+</body>
+
+</html>
